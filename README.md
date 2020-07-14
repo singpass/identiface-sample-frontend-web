@@ -1,6 +1,6 @@
 # Identiface SDK Sample Application
 
-This is a sample application for SingPass Face Verification Service ("Identiface"). Consider using the [QuickStart Guide] (https://www.identiface.live/docs) for rapid prototyping without having to implement the backend.
+This is a sample application for SingPass Face Verification Service ("Identiface"). Consider using the [QuickStart Guide](https://www.identiface.live/docs) for rapid prototyping without having to implement the backend.
 
 > Note that UAT API keys and the X.509 Public Certificate are located in the Welcome Package for Developers. You will be issued one upon a successful link-up request. 
 
@@ -41,7 +41,7 @@ For the Face service, the requirements are:
 * **Flask**
 * **jwcrypto 0.7** – to verify JWS signature
 
-For the frontend service, you need `npm`. Also consider checking out the documentation for [NuxtJS] (https://nuxtjs.org) if you require troubleshooting.
+For the frontend service, you need `npm`. Also consider checking out the documentation for [NuxtJS](https://nuxtjs.org) if you require troubleshooting.
 
 Next, to set the connection between the frontend and backend, edit the value `baseURL` in `/ui/nuxt.config.js`:
 
@@ -79,20 +79,20 @@ You can access the application through **http://localhost:3000**.
 
 ## Built With
 
-* [VueJS] (https://vuejs.org) - Javascript Framework for the front-end
+* [VueJS](https://vuejs.org) - Javascript Framework for the front-end
 * [NuxtJS](https://nuxtjs.org/guide) - The framework used for Server-Side Rendering (SSR)
-* [Buefy] (https://buefy.org) - Lightweight UI components based on [Bulma] (https://bulma.io)
+* [Buefy](https://buefy.org) - Lightweight UI components based on [Bulma](https://bulma.io)
 * [Docker](https://www.docker.com/) - Used to containerise different microservices
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/) - Python Web Server
 
 ## Contributors
 
-* **[Emmanuel Rayendra] (https://theodorayy.github.io/)**, GovTech – *UI + backend Flask API, documentation*
+* **[Emmanuel Rayendra](https://theodorayy.github.io/)**, GovTech – *UI + backend Flask API, documentation*
 
 ## License
 
-Please abide by the SingPass [Terms of Use] (https://www.singpass.gov.sg/singpass/common/termsofuse).
+Please abide by the SingPass [Terms of Use](https://www.singpass.gov.sg/singpass/common/termsofuse).
 
 ## Acknowledgments
 
-* [linuxserver/letsencrypt] (https://hub.docker.com/r/linuxserver/letsencrypt/) – nginx container for easy SSL setup
+* [linuxserver/letsencrypt](https://hub.docker.com/r/linuxserver/letsencrypt/) – nginx container for easy SSL setup
