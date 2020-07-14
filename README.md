@@ -4,7 +4,7 @@ This is a sample application for SingPass Face Verification Service ("Identiface
 
 > Note that UAT API keys and the X.509 Public Certificate are located in the Welcome Package for Developers. You will be issued one upon a successful link-up request. 
 
--
+----
 
 Face Verify Sample: `https://www.identiface.live/html_sdk`
 
