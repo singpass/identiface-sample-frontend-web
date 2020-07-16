@@ -1,16 +1,16 @@
 # Identiface SDK Sample Application
 
-This is a sample application for SingPass Face Verification Service ("Identiface"). Consider using the [QuickStart Guide](https://www.identiface.live/docs) for rapid prototyping without having to implement the backend.
+This is a sample application for SingPass Face Verification Service ("Identiface"). Consider using the [QuickStart Guide](http://developer.bio-api.singpass.gov.sg/guide/quickstart.html) for rapid prototyping without having to implement the backend.
 
 > Note that UAT API keys and the X.509 Public Certificate are located in the Welcome Package for Developers. You will be issued one upon a successful link-up request. 
 
 ----
 
-Face Verify Sample: `https://www.identiface.live/html_sdk`
+Face Verify Sample: `https://www.identiface.live/html_sdk` or `ui/pages/html_sdk`
 
 > Face Verify contains an SDK (in HTML5, iOS, Android SDKs) to verify your user's face-biometrics features against the Government's biometrics data source. This SDK includes Presentation-Attack-Detection and liveness detection technologies to verify the user's identity authenticity.
 
-Face Compare Sample: `https://www.identiface.live/compare`
+Face Compare Sample: `ui/pages/compare` (sample not being maintained/deprecated)
 
 > Face Compare is a direct API endpoint to match the user against the Government's biometrics data source. You could choose to upload static images of the user and our backend will compare the image against the SingPass Face database to return you a match result.
 
