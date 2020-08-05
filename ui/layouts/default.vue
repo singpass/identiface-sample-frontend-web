@@ -49,6 +49,11 @@ export default {
         color: rgba(255, 255, 255) !important;
     }
 
+    .tag:not(body).is-pill-blue {
+        background-color: #43b4d0 !important;
+        color: rgba(255, 255, 255) !important;
+    }
+
     .token.attr-name {
         padding-left: 0.5rem !important;
     }

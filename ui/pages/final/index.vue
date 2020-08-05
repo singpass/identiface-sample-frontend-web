@@ -32,9 +32,9 @@ export default {
         }
     },
     mounted() {
-        if (this.$route.query.type == "transactions") {
-            this.restartURL = "/html_sdk?type=transactions"
-        }
+        // if (this.$route.query.type == "transactions") {
+        //     this.restartURL = "/?type=transactions"
+        // }
 
         let query = Object.assign({}, this.$route.query)
 
@@ -44,7 +44,7 @@ export default {
             delete query.user_id
             delete query.service_id
         } else {
-            this.restartURL = "/compare"
+            this.restartURL = "/sample-app/employee-image"
             this.buttonTitle = "Re-upload profile picture"
         }
 
@@ -57,7 +57,7 @@ export default {
             user_id: "",
             service_id: "",
             title: "",
-            restartURL: "/html_sdk",
+            restartURL: "/sample-app/",
             buttonTitle: "Restart verification",
 
             // environmentURLs
@@ -102,7 +102,7 @@ export default {
                         }
                         
                         this.buttonTitle = "Done"
-                        this.restartURL = "/"
+                        this.restartURL = "/sample-app/"
                     } else {
                         this.alerts("Failed verification", "is-danger", 5000)
                         this.title = "Couldn't verify your identity. Retry?"

@@ -1,16 +1,18 @@
 # Identiface SDK Sample Application
 
+base_url: `http://localhost:3000/sample-app/`
+
 This is a sample application for SingPass Face Verification Service ("Identiface"). Consider using the [QuickStart Guide](http://developer.bio-api.singpass.gov.sg/guide/quickstart.html) for rapid prototyping without having to implement the backend.
 
-> Note that UAT API keys and the X.509 Public Certificate are located in the Welcome Package for Developers. You will be issued one upon a successful link-up request. 
+> Note that UAT API keys and the X.509 Public Certificate are located in the Welcome Package for Developers. You will be issued one upon a successful link-up request.
 
 ----
 
-Face Verify Sample: `https://www.identiface.live/html_sdk` or `ui/pages/html_sdk`
+Face Verify Sample: `https://www.identiface.live/sample-app/registrations` or `ui/pages/registrations`
 
 > Face Verify contains an SDK (in HTML5, iOS, Android SDKs) to verify your user's face-biometrics features against the Government's biometrics data source. This SDK includes Presentation-Attack-Detection and liveness detection technologies to verify the user's identity authenticity.
 
-Face Compare Sample: `ui/pages/compare` (sample not being maintained/deprecated)
+Face Compare Sample: `ui/pages/compare`
 
 > Face Compare is a direct API endpoint to match the user against the Government's biometrics data source. You could choose to upload static images of the user and our backend will compare the image against the SingPass Face database to return you a match result.
 
@@ -75,7 +77,7 @@ sh run.sh
 ```
 This will run the **backend** service.
 
-You can access the application through **http://localhost:3000**.
+You can access the application through **http://localhost:3000/sample-app/**.
 
 ## Built With
 
@@ -96,3 +98,10 @@ Please abide by the SingPass [Terms of Use](https://www.singpass.gov.sg/singpass
 ## Acknowledgments
 
 * [linuxserver/letsencrypt](https://hub.docker.com/r/linuxserver/letsencrypt/) – nginx container for easy SSL setup
+
+
+-----
+
+_Please contact the [NDI Biometrics Team](mailto:biometrics_support@ndi.gov.sg) if you would like to provide feedback. Thanks!_
+
+---- 

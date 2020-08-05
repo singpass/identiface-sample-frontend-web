@@ -1,8 +1,8 @@
-# Identiface Face Compare
+# SingPass Face Compare Example
 
 > ### TL;DR
 > 
-> First, to use the API, you need to get the OAuth 2.0 Access Token from the `/face/oauth/token/` endpoint using your Client ID & Secret.
+> First, to use the SDK, you need to get the OAuth 2.0 Access Token from the `/face/oauth/token/` endpoint using your Client ID & Secret.
 > 
 > Next, you can choose to upload static images of the user, or a simple webcam upload and send it to the `/face/compare` SingPass API endpoint.
 

@@ -64,7 +64,7 @@
                                     </b-upload>
                                 </b-field>
                                 <b-button :type="this.buttontype" v-on:click="cameraConfig" v-if="this.user_id.length == 9">{{this.label}}</b-button>
-                                <a class="button is-warning" v-if="verified" href="/compare">Restart verification</a>
+                                <a class="button is-warning" v-if="verified" href="/sample-app/employee-image">Restart verification</a>
                             </div>
                         </form>
                     </div>
@@ -77,7 +77,8 @@
                     <div class="content">
                         <p><b>Welcome to the Face Compare API demo.</b></p>
                         <p class="is-italic">Face Compare is a direct API endpoint to parse static images and get match results.</p>
-                        <p>In this demo, we will be using a dummy NRIC persona <code>G2957839M</code>, which will return an always <code>true</code> result when verifying the identity, regardless of the face.</p>
+                        <p>In this demo, we imagine a journey where an employee wants to submit a new employee card image.</p>
+                        <p>We will be using a dummy NRIC persona <code>G2957839M</code>, which will return an always <code>true</code> result when verifying the identity, regardless of the face.</p>
                         <p>If you'd like to test a flow that will <b>fail</b> authentication, please replace the dummy NRIC persona to <code>G2834561K</code>. This will return a <code>false</code> match result.</p>
                         <br>
                         <a class="button is-primary" @click="isCardModalActive = false">Close</a>
@@ -138,7 +139,7 @@ export default {
     data() {
         return {
             uploaded: false,
-            notice: "Your new profile picture must contain your own face.",
+            notice: "Your new employee card image must contain your own face.",
             columnA: "column is-4 is-offset-4",
             columnB: "column",
             cameraState: false,
@@ -288,7 +289,7 @@ export default {
             } catch {
                 console.log("Camera not turned on or doesn't exist.")
             } finally {
-                this.notice = "Your new profile image must be an image of yourself."
+                this.notice = "Your new employee card image must be an image of yourself."
                 this.cameraReady = false
             }
         },

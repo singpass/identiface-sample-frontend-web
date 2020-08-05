@@ -12,44 +12,18 @@
                     :animated="true"
                     :rounded="false"
                     :has-navigation="false">
-                    <b-step-item step="1" label="Account" :clickable="false" v-if="demoType!='transactions'">
-                        <h1 class="title has-text-centered">Account</h1>
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="content">
-                                    <!-- For keying in of NRIC -->
-                                    <form v-on:submit.prevent="startVerify">
-                                        <b-field label="First name">
-                                            <b-input value="John" placeholder="" required :disabled="true"></b-input>
-                                        </b-field>
-                                        <b-field label="Last name">
-                                            <b-input value="Doe" placeholder="" required :disabled="true"></b-input>
-                                        </b-field>
-                                        <b-field label="NRIC/FIN number">
-                                            <b-input v-model="user_id" placeholder="S7012345A" required :disabled="validated"></b-input>
-                                        </b-field>
-                                        <a class="is-primary is-size-7" @click="user_id = 'G2834561K'" v-if="this.user_id == 'G2957839M'"><u>Set to a dummy NRIC persona that will fail verification</u></a>
-                                        <a class="is-primary is-size-7" @click="user_id = 'G2957839M'" v-else><u>Set to a dummy NRIC persona that will pass verification</u></a>
-                                        <br><br>
-                                        <b-button type="submit" class="is-primary" :disabled="!(!validated && this.user_id.length == 9)" v-on:click="startVerify">Next</b-button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </b-step-item>
-
-                    <b-step-item step="1" label="Transfer" :clickable="false" v-if="demoType=='transactions'">
-                        <h1 class="title has-text-centered">Transfer</h1>
+                    <b-step-item step="1" label="Transfer details" :clickable="false">
+                        <h1 class="title has-text-centered">Transfer details</h1>
                         <div class="card">
                             <div class="card-content">
                                 <div class="content">
                                     <!-- For keying in of NRIC -->
                                     <form v-on:submit.prevent="startVerify">
                                         <b-field label="Transfer to account">
-                                            <b-input value="177-77777-777" placeholder="" required :disabled="true"></b-input>
+                                            <b-input v-model="account" placeholder="" required :disabled="true"></b-input>
                                         </b-field>
                                         <b-field label="Amount">
-                                            <b-input value="S$ 9,999,999.99" placeholder="" required :disabled="true"></b-input>
+                                            <b-input v-model="amount" placeholder="" required :disabled="true"></b-input>
                                         </b-field>
                                         <b-field label="Key in your NRIC/FIN number to confirm">
                                             <b-input v-model="user_id" placeholder="S7012345A" required :disabled="validated"></b-input>
@@ -65,11 +39,16 @@
                     </b-step-item>
 
                     <b-step-item step="2" label="Verification" :clickable="false">
-                        <h1 class="title has-text-centered">Verification</h1>
+                        <h1 class="title has-text-centered">{{title}}</h1>
                         
                         <div class="card">
                             <div class="card-content">
-                                <div class="content" ref="verifyCard">
+                                <div class="content" ref="verifyCard" v-if="verified" style="justify-content:center;">
+                                    <img src="@/assets/img/tick.png" style="max-height: 30vh;">
+                                    <h1>Success!</h1>
+                                    <h3>{{amount}} was transferred to account number {{account}}.</h3>
+                                </div>
+                                <div class="content" ref="verifyCard" v-if="!verified">
                                     <h4>Verify your identity with SingPass Face</h4>
                                     <img src="@/assets/img/SingPassLogo.svg">
                                     <br>
@@ -77,6 +56,11 @@
                                         @click="isPrivacyAssuranceActive = true">
                                         Read SingPass Face Privacy Assurance
                                     </a>
+                                    <br>
+                                    <br>
+                                    <p>Verification progress:</p>
+                                    <progress id="progress-bar" class="progress is-large is-primary" value="0" max="100" hidden>0</progress>
+                                    <hr>
                                     <!-- SPFace Component -->
                                     <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
                                     <sp-face :token="token" v-if="validated" 
@@ -122,17 +106,17 @@
                                             <!-- Passed verification -->
                                             <div slot="passed" class="m-1">
                                                 <!-- Redirect to the next action on successful validation -->
-                                                <a class="button is-primary" :href="nextURL">Continue</a>
+                                                <p>You have successfully transferred.</p>
                                             </div>
                                             <!-- Failed verification -->
                                             <div slot="failed" class="m-1">
                                                 <!-- Redirect to the next action on successful validation -->
-                                                <a class="button is-primary" :href="nextURL">Continue</a>
+                                                <p>You have failed verification. Retry?</p>
                                             </div>
                                             <!-- Errors -->
                                             <div slot="error" class="m-1">
                                                 <p class="has-text-grey-dark">Oh no, something went wrong. Please try again.<br></p>
-                                                <a class="button is-warning" href="/html_sdk">Retry</a>
+                                                <a class="button is-warning" href="/transactions">Retry</a>
                                             </div>
                                         </div>
                                     </sp-face>
@@ -149,7 +133,7 @@
                     <div class="content">
                         <p><b>Welcome to the Face Verify API demo.</b></p>
                         <p class="is-italic">The Face Verify Service contains a face-scanning module with Presentation-Attack-Detection (PAD) and liveness detection technologies that you can use to embed into your frontend, with API endpoints to validate the user's identity and results.</p>
-                        <p>In this sample registration page demo, we will be using a dummy NRIC persona <code>G2957839M</code>, which will return an always <code>true</code> result when verifying the identity, regardless of the face.</p>
+                        <p>In this sample transaction authorisation demo, we will be using a dummy NRIC persona <code>G2957839M</code>, which will return an always <code>true</code> result when verifying the identity, regardless of the face.</p>
                         <p>If you'd like to test a flow that will <b>fail</b> authentication, please replace the dummy NRIC persona to <code>G2834561K</code>. This will return a <code>false</code> match result.</p>
                         <br>
                         <a class="button is-primary" @click="isCardModalActive = false">Close</a>
@@ -213,29 +197,28 @@ export default {
         // Mounted is part of a lifecycle hook in VueJS. Once the DOM is ready, you can specify which functions to be run here.
         // This web app will retrieve the OAuth access token first on page serve
         this.token = ""
-        this.nextURL = "/final?token="
-        if (this.$route.query.type == "transactions") {
-            this.demoType = this.$route.query.type
-            this.notice = "You need to verify before proceeding."
-            this.alerts("You're about to transfer more than your daily limit. Verification is needed.", "is-danger", 5000)
-        } else {
-            this.alerts("Welcome!", "is-primary", 5000)
-        }
+        this.notice = "You need to verify before proceeding with the transfer."
+        this.alerts("You're about to transfer more than your daily limit. Verification is needed.", "is-danger", 5000)
 
         if (process.client) { 
             window.SpfaceEvent = event => {
+
+                var x = document.getElementsByTagName("PROGRESS")
+
                 switch (event.type) {
                     case "aborted":
                         this.alerts("You've aborted the process.", "is-danger", 5000)
                         break
                     case "passed":
                     case "failed":
-                        this.alerts("Click next to continue.", "is-info", 5000)
+                        x[0].setAttribute("value", 100)
+                        this.validateResult()
                         break
                     case "error":
                         this.alerts("Error: " + event.detail.reason, "is-danger", 5000)
                         break
                     case "ready":
+                        x[0].setAttribute("value", 10)
                         this.alerts("Ready to begin face verification", "is-success", 3000)
                         break
                     case "unsupported":
@@ -248,7 +231,23 @@ export default {
                         this.alerts("You need to enable camera permissions to continue", "is-warning", 3000)
                         break
                     case "progress":
-                        // console.info(event.detail.message + " (" + event.detail.progress + "%)")
+                        x[0].style.visibility = "visible"
+
+                        var current = x[0].getAttribute("value")
+
+                        var difference = event.detail.progress - current
+
+                        for (let index = current; index < difference; index++) {
+                            x[0].setAttribute("value", event.detail.progress)
+                        }
+
+                        if (event.detail.progress > 40 && event.detail.progress < 60) {
+                            x[0].classList.remove("is-primary")
+                            x[0].classList.add("is-info")
+                        } else if (event.detail.progress > 60) {
+                            x[0].classList.remove("is-info")
+                            x[0].classList.add("is-success")
+                        }
                         break
                     case "feedback":
                         this.alerts(event.detail.reason, "is-info", 5000)
@@ -260,17 +259,18 @@ export default {
     },
     data() {
         return {
-            demoType: "userOnboarding",
-            uploaded: false,
             notice: "Thank you for signing up.",
             columnA: "column is-6 is-offset-3",
-            cameraState: false,
-            slot: "",
             label: "Validate NRIC",
-            verified: false,
+            
             token: "",
-            nextURL: "/final?token=",
             activeStep: 0,
+
+            title: "Verification",
+
+            // dummy data
+            account: "177-77777-777",
+            amount: "S$ 9,999,999.99",
 
             // data to send to the server
             service_id: "SingPass",
@@ -278,6 +278,7 @@ export default {
             transaction_type: "SingPass onboarding",
             image: "",
             validated: false,
+            verified: false,
 
             // environmentURLs
             backendPass: "ndi-api", // this is for the UI to authenticate with the backend securely
@@ -333,7 +334,6 @@ export default {
                     } else {
                         var token = tokenResponse.token
                         this.token = tokenResponse.token
-                        this.nextURL += this.token + "&user_id=" + this.user_id + "&service_id=" + this.service_id
                         this.alerts("NRIC validated!", "is-success", 2000)
                         this.notice = "We'll need to verify your identity now."
 
@@ -351,6 +351,46 @@ export default {
                         this.alerts("ERROR: Service is offline", "is-danger", 5000)
                     }
                 })
+            })
+        },
+        validateResult() {
+            let r = this.$axios.$post("/face/verify/validate", {
+                "user_id": this.user_id,
+                "service_id": this.service_id,
+                "token": this.token,
+                "pw": this.backendPass
+            }).then((vResponse) => {
+
+                if (vResponse.type == "success") {
+                    var hasPassed = vResponse.is_passed
+                    var reason = vResponse.reason
+                    var score = Math.ceil(vResponse.score * 100)
+
+                    // set the minimum score you will allow to pass
+                    var minThreshold = 70
+
+                    if (hasPassed && score > minThreshold) {
+                        this.verified = true
+                        this.notice = "Transaction successful!"
+                        this.title = "Success!"
+                        this.alerts("You have successfully transferred S$ 9,999,999.99 to account number 177-77777-777.", "is-success", 10000)
+                    } else {
+                        this.alerts("Failed verification", "is-danger", 5000)
+                    }
+                } else {
+                    var message = vResponse.message
+                    console.log(vResponse)
+                    this.alerts(message.error_description, "is-danger", 5000)
+                }
+            }).catch((error) => {
+
+                if (error.response != undefined) {
+                    var r = error.response.data
+                    var message = r.message.error_description
+                    this.alerts(message, "is-danger", 2000)
+                } else {
+                    this.alerts("ERROR: Service is offline", "is-danger", 5000)
+                }
             })
         },
         // Loading notification

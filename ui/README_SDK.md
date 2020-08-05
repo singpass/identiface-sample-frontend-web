@@ -1,4 +1,4 @@
-# Identiface Face Verify
+# SingPass Face Verification SDK Example
 
 > ### TL;DR
 > 
@@ -46,7 +46,7 @@ and returns the OAuth 2.0 Access Token, which will be needed for all SingPass AP
 
 ****
 
-**getFaceVerifyToken()**
+**faceSDK()**
 
 This function calls the SingPass API endpoint `/face/verify/token` for use in the verification module `<sp-face>` object injected into your HTML page.
 

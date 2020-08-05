@@ -1,0 +1,232 @@
+<html>
+<!-- head and body goes here -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Identiface HTML Example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script src="https://bio-face.s3-ap-southeast-1.amazonaws.com/html5sdk/spface.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <section class="hero is-fullheight">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title has-text-centered">
+                        Hello, identiface yourself.
+                    </h1>
+                    <div class="columns">
+                        <div class="column is-6 is-offset-3">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div id="messages">
+                                        <!-- insert messages -->
+                                        <article v-bind:class="[message_colour]">
+                                            <div class="message-body">
+                                                {{ message }}
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <form v-bind:class="[form_hidden ? 'is-hidden' : '']" id="form-input" @submit.preventDefault="startVerify">
+                                        <input class="input" id="nric" type="text" v-model="user_id" placeholder="Fill in your NRIC number here">
+                                        <br>
+                                        <br>
+                                        <button type="submit" class="button is-primary">Submit</button>
+                                    </form>
+                                    <!-- This will be where the <sp-face> component will be inserted -->
+                                        <div v-bind:class="[!form_hidden ? 'is-hidden' : '']" id="sp-face-here">
+                                            <sp-face v-if="token != ''" v-bind:token="[token]" v-bind:base_url="[singpassURL]">
+                                                <!-- Custom slots go in here -->
+                                                <div id="sp-face-slots">
+                                                    <!-- No Camera -->
+                                                    <div slot="no_camera">
+                                                        <br>
+                                                        <p class="has-text-danger">You don't have a camera on your device.<br></p>
+                                                    </div>
+                                                    <!-- Unsupported browser -->
+                                                    <!-- Permissions check -->
+                                                    <div slot="grant_permission">
+                                                        <br>
+                                                        <p class="has-text-grey-dark">Before we proceed, please allow us to access your camera.<br></p>
+                                                    </div>
+                                                    <br>
+                                                    <div slot="grant_button">
+                                                        <button class="button is-warning">Allow camera access</button>
+                                                    </div>
+                                                    <!-- Permissions denied -->
+                                                    <div slot="permission_denied">
+                                                        <br>
+                                                        <p class="has-text-danger">You've denied permissions. If you would like to continue with the verification, please refresh the page.<br></p>
+                                                    </div>
+                                                    <!-- UI has access to camera and is ready to begin verification -->
+                                                    <div slot="ready">
+                                                        <br>
+                                                        <p class="has-text-grey-dark">Thank you. Please proceed to verify your identity.<br></p>
+                                                    </div>
+                                                    <br>
+                                                    <div slot="button">
+                                                        <button class="button is-primary">Scan my face</button>
+                                                    </div>
+                                                    <!-- User aborted the verification process -->
+                                                    <div slot="aborted">
+                                                        <br>
+                                                        <p class="has-text-grey-dark">If you'd like to try again, please click the button below.<br></p>
+                                                    </div>
+                                                    <!-- Verification is sent to the server and is processing -->
+                                                    <div slot="progress">
+                                                        <br>
+                                                        <p class="has-text-grey-dark">Verifying, please wait...<br></p>
+                                                        <progress class="progress is-primary" max="100"></progress>
+                                                    </div>
+                                                    <!-- Passed verification -->
+                                                    <div slot="passed">
+                                                    </div>
+                                                    <!-- Failed verification -->
+                                                    <div slot="failed">
+                                                    </div>
+                                                    <!-- Errors -->
+                                                    <div slot="error">
+                                                        <br>
+                                                        <p class="has-text-grey-dark">Oh no, something went wrong. Please try again.<br></p>
+                                                        <a class="button is-warning" href="/html_sdk">Retry</a>
+                                                    </div>
+                                                </div>
+                                            </sp-face>
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            singpassURL: "https://stg-bio-stream.singpass.gov.sg",
+            baseURL: "https://www.identiface.live/api",
+            user_id: "",
+            service_id: "SingPass",
+            pw: "ndi-api",
+            token: "",
+            
+            message: "Please fill in your NRIC below.",
+            message_colour: "message is-primary",
+
+            form_hidden: false,
+        },
+        created: function() {
+            window.SpfaceEvent = event => {
+                switch (event.type) {
+                    case "passed":
+                    case "failed":
+                        this.validateResult();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        },
+        methods: {
+            alerts(message, colour) {
+                this.message = message
+                this.message_colour = "message " + colour
+            },
+            startVerify(e) {
+                e.preventDefault()
+                this.validateNRIC().then((token) => {
+                    if (token != "") {
+                        this.form_hidden = true
+                    }
+                }).catch((error) => {
+                    if (error.response != undefined) {
+                        var r = error.response.data
+                        this.alerts(r.message, "is-danger")
+                    } else {
+                        this.alerts("ERROR: Service is offline", "is-danger")
+                    }
+                })
+            },
+            validateNRIC() {
+                return new Promise((resolve, reject) => {
+                    this.token = ""
+                    let r = axios.post(this.baseURL + "/face/verify/token", {
+                        "user_id": this.user_id, 
+                        "service_id": this.service_id, 
+                        "transaction_type": this.transaction_type, 
+                        "pw": this.pw
+                    }).then((response) => {
+                        var tokenResponse = response.data
+                        if (tokenResponse.type == "error") {
+                            this.alerts(tokenResponse.status + " " + tokenResponse.message.error_description, "is-danger")
+                        } else {
+                            var token = tokenResponse.token
+                            this.token = tokenResponse.token
+                            this.nextURL += this.token + "&user_id=" + this.user_id + "&service_id=" + this.service_id
+                            this.alerts("NRIC validated!", "is-info")
+
+                            resolve(token)
+                        }
+                    }).catch((error) => {
+                        this.token = ""
+                        if (error.response != undefined) {
+                            var r = error.response.data
+                            this.alerts(r, "is-danger")
+                        } else {
+                            this.notice = "Verification service is offline."
+                            this.alerts("ERROR: Service is offline", "is-danger")
+                        }
+                    })
+                })
+            },
+
+            // Place validateResult() here
+            validateResult() {
+            let r = axios.post(this.baseURL + "/face/verify/validate", {
+                "user_id": this.user_id,
+                "service_id": this.service_id,
+                "token": this.token,
+                "pw": this.pw
+            }).then((response) => {
+                var vResponse = response.data
+                console.log(vResponse)
+                if (vResponse.type == "success") {
+                    var hasPassed = vResponse.is_passed
+                    var reason = vResponse.reason
+                    var score = Math.ceil(vResponse.score * 100)
+
+                    // set the minimum score you will allow to pass
+                    var minThreshold = 70
+
+                    if (hasPassed && score > minThreshold) {
+                        this.alerts("Passed matching", "is-success")
+                    } else {
+                        this.alerts("Failed verification! Match score: " + vResponse.score, "is-danger")
+                    }
+                } else {
+                    var message = vResponse.message
+                    this.alerts(message.error_description, "is-danger")
+                }
+            }).catch((error) => {
+
+                if (error.response != undefined) {
+                    var r = error.response.data
+                    var message = r.message.error_description
+                    this.alerts(message, "is-danger")
+                } else {
+                    this.alerts("ERROR: Service is offline", "is-danger")
+                }
+            })
+        }
+
+        },
+    });
+</script>
+</html>
