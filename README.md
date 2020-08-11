@@ -1,4 +1,4 @@
-# Identiface SDK Sample Application
+# Identiface HTML Sample Application
 
 base_url: `http://localhost:3000/sample-app/`
 
