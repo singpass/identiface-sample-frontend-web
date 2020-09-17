@@ -1,4 +1,4 @@
-# Identiface HTML Sample Application
+# Identiface Web Sample Application
 
 base_url: `http://localhost:3000/sample-app/`
 
@@ -8,17 +8,17 @@ This is a sample application for SingPass Face Verification Service ("Identiface
 
 ----
 
-Face Verify Sample: `https://www.identiface.live/sample-app/registrations` or `ui/pages/registrations`
+Face Verify Sample: `https://www.identiface.live/sample-app/transactions` or `ui/pages/transactions`
 
 > Face Verify contains an SDK (in HTML5, iOS, Android SDKs) to verify your user's face-biometrics features against the Government's biometrics data source. This SDK includes Presentation-Attack-Detection and liveness detection technologies to verify the user's identity authenticity.
 
-Face Compare Sample: `ui/pages/compare`
+Face Compare Sample: `ui/pages/employee-image`
 
 > Face Compare is a direct API endpoint to match the user against the Government's biometrics data source. You could choose to upload static images of the user and our backend will compare the image against the SingPass Face database to return you a match result.
 
-Backend API: `https://www.identiface.live/api`
+QuickStart backend API: `https://www.identiface.live/api`
 
-> This backend is used to serve the frontend and communicates directly with the SingPass API endpoints.
+> This backend is used to serve the frontend for QuickStart purposes and communicates directly with the SingPass API endpoints.
 
 ## Test Accounts
 
@@ -31,21 +31,15 @@ These dummy accounts will always either returns a `true` or `false` on **matchin
 ## Stack
 
 **Frontend**: NuxtJS on port `3000`
-
 **Backend**: Python-Flask on port `9000`
 
 ## Prerequisites
 
-For the Face service, the requirements are:
+You need the Face backend service for this sample application, which is found [here](https://github.com/theodorayy/ndi-identiface-sample-public-backend).
 
-* **pip3**
-* **Python 3+**
-* **Flask**
-* **jwcrypto 0.7** – to verify JWS signature
+For the frontend, you need `npm`. Also consider checking out the documentation for [NuxtJS](https://nuxtjs.org) if you require troubleshooting.
 
-For the frontend service, you need `npm`. Also consider checking out the documentation for [NuxtJS](https://nuxtjs.org) if you require troubleshooting.
-
-Next, to set the connection between the frontend and backend, edit the value `baseURL` in `/ui/nuxt.config.js`:
+To set the connection between the frontend and backend, edit the value `baseURL` in `/ui/nuxt.config.js`:
 
 ```
 axios: {
@@ -67,17 +61,7 @@ npm install
 npm run dev
 ```
 
-This is to start the **frontend** service.
-
-Next, place the **run.sh** file that you have received from our guide to the `microsvc/face` folder, and run the following commands:
-
-```
-sh install.sh
-sh run.sh
-```
-This will run the **backend** service.
-
-You can access the application through **http://localhost:3000/sample-app/**.
+This is to start the **frontend** service.You can access the application through **http://localhost:3000/sample-app/**.
 
 ## Built With
 
@@ -87,21 +71,12 @@ You can access the application through **http://localhost:3000/sample-app/**.
 * [Docker](https://www.docker.com/) - Used to containerise different microservices
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/) - Python Web Server
 
-## Contributors
-
-* **[Emmanuel Rayendra](https://theodorayy.github.io/)**, GovTech – *UI + backend Flask API, documentation*
-
 ## License
 
 Please abide by the SingPass [Terms of Use](https://www.singpass.gov.sg/singpass/common/termsofuse).
 
-## Acknowledgments
-
-* [linuxserver/letsencrypt](https://hub.docker.com/r/linuxserver/letsencrypt/) – nginx container for easy SSL setup
-
-
 -----
 
-_Please contact the [NDI Biometrics Team](mailto:biometrics_support@ndi.gov.sg) if you would like to provide feedback. Thanks!_
+_We appreciate any feedback you'd like to provide to our [NDI Biometrics Team](mailto:biometrics_support@ndi.gov.sg) email address. Thanks!_
 
 ---- 
