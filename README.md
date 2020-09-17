@@ -65,11 +65,8 @@ This is to start the **frontend** service.You can access the application through
 
 ## Built With
 
-* [VueJS](https://vuejs.org) - Javascript Framework for the front-end
 * [NuxtJS](https://nuxtjs.org/guide) - The framework used for Server-Side Rendering (SSR)
 * [Buefy](https://buefy.org) - Lightweight UI components based on [Bulma](https://bulma.io)
-* [Docker](https://www.docker.com/) - Used to containerise different microservices
-* [Flask](https://flask.palletsprojects.com/en/1.1.x/) - Python Web Server
 
 ## License
 
