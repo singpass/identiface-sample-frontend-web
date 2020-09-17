@@ -4,10 +4,8 @@
             <div :class="columnB" v-if="cameraState">
                 <div class="card">
                     <div class="card-image has-text-centered">
-                        <div ref="divH" class="camera-modal">
                             <video ref="video" class="camera-stream" />
                             <canvas ref="c" style="display:none;" :width="this.canvasWidth" :height="this.canvasHeight"></canvas>
-                        </div>
                     </div>
                     <div class="card-content">
                         <div class="content">
@@ -170,6 +168,13 @@ export default {
         }
     },
     watch: {
+        turnOnCamera: function() {
+            if (this.turnOnCamera) {
+                this.canvasWidth = this.$refs.video.clientWidth
+                this.canvasHeight = this.$refs.video.clientHeight
+                console.log(this.$refs.video.clientHeight)
+            }
+        },
         file: function() {
             if (this.file != null) {
                 this.disableInput = true
@@ -239,6 +244,8 @@ export default {
             
         },
         takeAPicture() {
+            this.canvasWidth = this.$refs.video.clientWidth
+            this.canvasHeight = this.$refs.video.clientHeight
             this.captureImage().then((response) => {
                 this.notice = "Hold on..."
                 this.verifyPerson(response)
@@ -251,11 +258,16 @@ export default {
             if (this.cameraState) {
                 return new Promise((resolve) => {
                     this.alerts("Taking a picture", "is-primary", 100)
+
                     var canvas = this.$refs.c
-                    canvas.getContext("2d").drawImage(this.$refs.video, 0, 0, this.canvasWidth, this.canvasHeight);
+                    
+                    console.log(canvas.clientHeight)
+
+                    canvas.getContext("2d").drawImage(this.$refs.video, 0, 0, this.$refs.video.clientWidth, this.$refs.video.clientHeight);
 
                     // img is the base64 encode of jpeg
                     var img = canvas.toDataURL("image/jpeg");
+                    console.log(img)
                     this.uploaded = true
                     this.image = img
                     this.alerts("Picture taken", "is-info", 1000)
@@ -264,14 +276,13 @@ export default {
             }
         },
         turnOnCamera () {
+            
             this.label = "Turn off camera"
             this.buttontype = "is-danger"
             navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
                 this.$refs.video.srcObject = mediaStream
                 this.$refs.video.play()
                 var number = this.countdown
-                this.canvasWidth = 1000
-                this.canvasHeight = 1000 / 4 * 3
                 this.cameraReady = true
             }).catch((error) => {
                 this.alerts(error, "is-danger", 5000)
@@ -334,8 +345,8 @@ export default {
                         this.alerts("Error: " + r.message, "is-danger", 2000)
                         this.notice += r.message
                     } else {
-                        this.notice = "Verification service is offline."
-                        this.alerts("ERROR: Service is offline", "is-danger", 5000)
+                        this.notice = "Please check back in awhile."
+                        this.alerts("ERROR: Please check back in awhile.", "is-danger", 5000)
                     }
                 })
             } catch {
@@ -357,8 +368,8 @@ export default {
 <style scoped>
 
     video {
-        max-width: 1000px;
-        max-height: 1000px;
+        /* max-width: 1000px;
+        max-height: 1000px; */
         overflow:hidden !important;
     }
 

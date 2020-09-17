@@ -86,3 +86,14 @@
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    // add head to include the generated client Javascript file => Script Tag
+    head () {
+        return {
+            title: 'Identiface | Sample User Flows',
+        }
+    },
+}
+</script>

@@ -110,7 +110,7 @@
                                             <!-- Errors -->
                                             <div slot="error" class="m-1">
                                                 <p class="has-text-grey-dark">Oh no, something went wrong. Please try again.<br></p>
-                                                <a class="button is-warning" href="/html_sdk">Retry</a>
+                                                <a class="button is-warning" href="/sample-app/registrations">Retry</a>
                                             </div>
                                         </div>
                                     </sp-face>
@@ -295,7 +295,7 @@ export default {
                     var r = error.response.data
                     this.alerts(r.message, "is-danger", 2000)
                 } else {
-                    this.alerts("ERROR: Service is offline", "is-danger", 5000)
+                    this.alerts("ERROR: Please check back in awhile.", "is-danger", 5000)
                 }
             })
         },
@@ -335,12 +335,16 @@ export default {
                     this.token = ""
                     if (error.response != undefined) {
                         var r = error.response.data
-                        this.notice = "Your NRIC is invalid or does not exist in the SingPass database."
-                        this.alerts("User doesn't exist in the SingPass database", "is-danger", 2000)
-                        console.log(r)
+                        if (r.status == 429) {
+                            this.alerts("Rate limit exceeded. Please try again in 1 minute.", "is-danger", 2000)
+                            this.notice = "Try again later."
+                        } else {
+                            this.notice = "Your NRIC is invalid or does not exist in the SingPass database."
+                            this.alerts("User doesn't exist in the SingPass database", "is-danger", 2000)
+                        }
                     } else {
-                        this.notice = "Verification service is offline."
-                        this.alerts("ERROR: Service is offline", "is-danger", 5000)
+                        this.notice = "Please check back in awhile."
+                        this.alerts("ERROR: Please check back in awhile.", "is-danger", 5000)
                     }
                 })
             })

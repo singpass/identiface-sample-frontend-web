@@ -28,7 +28,7 @@ export default {
             this.user_id = this.$route.query.user_id
             this.service_id = this.$route.query.service_id
         } else {
-            this.title = "Done! Your new profile image was saved."
+            this.title = "Done!"
         }
     },
     mounted() {

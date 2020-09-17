@@ -66,6 +66,7 @@
                                     <sp-face :token="token" v-if="validated" 
                                     base_url="https://stg-bio-stream.singpass.gov.sg"
                                     logo="https://www.ndi-api.gov.sg/assets/img/ndi-api-logo.png"
+                                    show_countdown="true"
                                     >
                                         <!-- Custom slots go in here -->
                                         <div id="sp-face-slots">
@@ -116,7 +117,7 @@
                                             <!-- Errors -->
                                             <div slot="error" class="m-1">
                                                 <p class="has-text-grey-dark">Oh no, something went wrong. Please try again.<br></p>
-                                                <a class="button is-warning" href="/transactions">Retry</a>
+                                                <a class="button is-warning" href="/sample-app/transactions">Retry</a>
                                             </div>
                                         </div>
                                     </sp-face>
@@ -343,12 +344,17 @@ export default {
                     this.token = ""
                     if (error.response != undefined) {
                         var r = error.response.data
-                        this.notice = "Your NRIC is invalid or does not exist in the SingPass database."
-                        this.alerts("User doesn't exist in the SingPass database", "is-danger", 2000)
-                        console.log(r)
+                        if (r.status == 429) {
+                            this.alerts("Rate limit exceeded. Please try again in 1 minute.", "is-danger", 2000)
+                            this.notice = "Try again later."
+                        } else {
+                            this.notice = "Your NRIC is invalid or does not exist in the SingPass database."
+                            this.alerts("User doesn't exist in the SingPass database", "is-danger", 2000)
+                        }
                     } else {
-                        this.notice = "Verification service is offline."
-                        this.alerts("ERROR: Service is offline", "is-danger", 5000)
+                        console.log(error)
+                        this.notice = "Please check back in a minute."
+                        this.alerts("ERROR: Please check back in awhile.", "is-danger", 5000)
                     }
                 })
             })
@@ -389,7 +395,7 @@ export default {
                     var message = r.message.error_description
                     this.alerts(message, "is-danger", 2000)
                 } else {
-                    this.alerts("ERROR: Service is offline", "is-danger", 5000)
+                    this.alerts("ERROR: Please check back in awhile", "is-danger", 5000)
                 }
             })
         },
