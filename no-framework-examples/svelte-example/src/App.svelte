@@ -6,7 +6,6 @@
     let buttonColour = "primary";
 
     let baseURL = "http://localhost:9000";
-    let pw = "ndi-api";
     let user_id = "";
     let service_id = "SingPass";
 
@@ -31,8 +30,7 @@
     async function getSessionToken() {
         const payload = JSON.stringify({
             "service_id": service_id,
-            "user_id": user_id,
-            "pw": pw
+            "user_id": user_id
         });
 
         const res = await fetch(baseURL + "/face/verify/token", {
@@ -78,8 +76,7 @@
     async function validate() {
         const validatePayload = JSON.stringify({
             "service_id": service_id,
-            "user_id": user_id,
-            "pw": "ndi-api",
+            "user_id": user_id
             "token": token
         });
         const res = await fetch(baseURL + "/face/verify/validate", {

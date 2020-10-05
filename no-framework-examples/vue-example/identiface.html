@@ -116,8 +116,7 @@
             singpassURL: "https://stg-bio-stream.singpass.gov.sg",
             baseURL: "http://localhost:9000",
             user_id: "",
-            service_id: "SingPass",
-            pw: "ndi-api",
+            service_id: "SingPass"
             token: "",
             
             message: "Please fill in your NRIC below.",
@@ -163,8 +162,7 @@
                     let r = axios.post(this.baseURL + "/face/verify/token", {
                         "user_id": this.user_id, 
                         "service_id": this.service_id, 
-                        "transaction_type": this.transaction_type, 
-                        "pw": this.pw
+                        "transaction_type": this.transaction_type
                     }).then((response) => {
                         var tokenResponse = response.data
                         if (tokenResponse.type == "error") {
@@ -193,8 +191,7 @@
                 let r = axios.post(this.baseURL + "/face/verify/validate", {
                     "user_id": this.user_id,
                     "service_id": this.service_id,
-                    "token": this.token,
-                    "pw": this.pw
+                    "token": this.token
                 }).then((response) => {
                     var vResponse = response.data
                     console.log(vResponse)
