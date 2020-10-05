@@ -46,7 +46,7 @@
                                 <div class="content" ref="verifyCard" v-if="verified" style="justify-content:center;">
                                     <img src="@/assets/img/tick.png" style="max-height: 30vh;">
                                     <h1>Success!</h1>
-                                    <h3>{{amount}} was transferred to account number {{account}}.</h3>
+                                    <h5>{{amount}} was transferred to account number {{account}}.</h5>
                                 </div>
                                 <div class="content" ref="verifyCard" v-if="!verified">
                                     <h4>Verify your identity with SingPass Face</h4>
@@ -271,7 +271,7 @@ export default {
 
             // dummy data
             account: "177-77777-777",
-            amount: "S$ 9,999,999.99",
+            amount: "S$ 9.99",
 
             // data to send to the server
             service_id: "SingPass",
@@ -280,9 +280,6 @@ export default {
             image: "",
             validated: false,
             verified: false,
-
-            // environmentURLs
-            backendPass: "ndi-api", // this is for the UI to authenticate with the backend securely
 
             // Loading icon
             isLoading: false,
@@ -326,8 +323,7 @@ export default {
                 let r = this.$axios.$post("/face/verify/token", {
                     "user_id": this.user_id, 
                     "service_id": this.service_id, 
-                    "transaction_type": this.transaction_type, 
-                    "pw": this.backendPass
+                    "transaction_type": this.transaction_type
                 }).then((tokenResponse) => {
                     if (tokenResponse.type == "error") {
                         this.alerts(tokenResponse.status + " " + tokenResponse.message.error_description, "is-danger", 5000)
@@ -363,8 +359,7 @@ export default {
             let r = this.$axios.$post("/face/verify/validate", {
                 "user_id": this.user_id,
                 "service_id": this.service_id,
-                "token": this.token,
-                "pw": this.backendPass
+                "token": this.token
             }).then((vResponse) => {
 
                 if (vResponse.type == "success") {
@@ -379,7 +374,7 @@ export default {
                         this.verified = true
                         this.notice = "Transaction successful!"
                         this.title = "Success!"
-                        this.alerts("You have successfully transferred S$ 9,999,999.99 to account number 177-77777-777.", "is-success", 10000)
+                        this.alerts("You have successfully transferred " + this.amount + " to account number 177-77777-777.", "is-success", 10000)
                     } else {
                         this.alerts("Failed verification", "is-danger", 5000)
                     }

@@ -271,9 +271,6 @@ export default {
             image: "",
             validated: false,
 
-            // environmentURLs
-            backendPass: "ndi-api", // this is for the UI to authenticate with the backend securely
-
             // Loading icon
             isLoading: false,
 
@@ -316,8 +313,7 @@ export default {
                 let r = this.$axios.$post("/face/verify/token", {
                     "user_id": this.user_id, 
                     "service_id": this.service_id, 
-                    "transaction_type": this.transaction_type, 
-                    "pw": this.backendPass
+                    "transaction_type": this.transaction_type
                 }).then((tokenResponse) => {
                     if (tokenResponse.type == "error") {
                         this.alerts(tokenResponse.status + " " + tokenResponse.message.error_description, "is-danger", 5000)

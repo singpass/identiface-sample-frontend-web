@@ -60,8 +60,6 @@ export default {
             restartURL: "/sample-app/",
             buttonTitle: "Restart verification",
 
-            // environmentURLs
-            backendPass: "ndi-api", // this is for the UI to authenticate with the backend securely
         }
     },
     methods: {
@@ -80,8 +78,7 @@ export default {
             let r = this.$axios.$post("/face/verify/validate", {
                 "user_id": this.user_id,
                 "service_id": this.service_id,
-                "token": this.token,
-                "pw": this.backendPass
+                "token": this.token
             }).then((vResponse) => {
 
                 if (vResponse.type == "success") {

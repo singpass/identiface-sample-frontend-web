@@ -40,7 +40,7 @@
                                     <p>We will verify your image using the <b>SingPass Face Verification service</b>.</p>
                                     <a @click="isPrivacyStatementActive = true"><u>Read privacy statement</u></a>
                                     <br><br>
-                                    <a class="button is-primary" href="/">Use another way</a>
+                                    <a class="button is-primary" href="/sample-app">Use another way</a>
                                 </div>
                                 <p v-if="this.user_id.length == 9 && !cameraState && this.file == null && !uploaded">Choose to upload an image or take a selfie</p>
                                 <b-field>
@@ -158,9 +158,6 @@ export default {
             user_id: "",
             transaction_type: "",
             image: "",
-            
-            // environmentURLs
-            backendPass: "ndi-api",
 
             // Modal
             isCardModalActive: true,
@@ -310,8 +307,7 @@ export default {
                 let req = this.$axios.$post("/face/compare", {
                         "service_id": this.service_id, 
                         "user_id": this.user_id, 
-                        "image": img, 
-                        "pw": this.backendPass
+                        "image": img
                     }).then((msResponse) => {
                     var type = msResponse.type
 
