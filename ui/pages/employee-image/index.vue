@@ -4,7 +4,7 @@
             <div :class="columnB" v-if="cameraState">
                 <div class="card">
                     <div class="card-image has-text-centered">
-                            <video ref="video" class="camera-stream" />
+                            <video ref="video" class="camera-stream" playsinline autoplay />
                             <canvas ref="c" style="display:none;" :width="this.canvasWidth" :height="this.canvasHeight"></canvas>
                     </div>
                     <div class="card-content">
