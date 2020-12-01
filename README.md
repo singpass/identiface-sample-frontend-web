@@ -8,17 +8,13 @@ This is a sample application for SingPass Face Verification Service ("Identiface
 
 ----
 
-Face Verify Sample: `https://developer.bio-api.singpass.gov.sg/sample-app/transactions` or `ui/pages/transactions`
+Face Verify Sample: `ui/pages/transactions`
 
 > Face Verify contains an SDK (in HTML5, iOS, Android SDKs) to verify your user's face-biometrics features against the Government's biometrics data source. This SDK includes Presentation-Attack-Detection and liveness detection technologies to verify the user's identity authenticity.
 
 Face Compare Sample: `ui/pages/employee-image`
 
 > Face Compare is a direct API endpoint to match the user against the Government's biometrics data source. You could choose to upload static images of the user and our backend will compare the image against the SingPass Face database to return you a match result.
-
-QuickStart backend API: `https://developer.bio-api.singpass.gov.sg/api`
-
-> This backend is used to serve the frontend for QuickStart purposes and communicates directly with the SingPass API endpoints.
 
 ## Test Accounts
 
