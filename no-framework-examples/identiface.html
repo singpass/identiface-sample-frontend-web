@@ -1,0 +1,192 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Identiface HTML Example</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+        <script src="https://bio-face.s3-ap-southeast-1.amazonaws.com/html5sdk/spface.js" defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <section class="hero is-fullheight">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title has-text-centered">
+                            Hello, identiface yourself.
+                        </h1>
+                        <div class="columns">
+                            <div class="column is-6 is-offset-3">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div id="msgs">
+                                            <article class="message is-primary">
+                                                <div class="message-body"> 
+                                                    Please Fill in your NRIC below.
+                                                </div>
+                                            </article>
+                                        </div>
+                                        <form>
+                                            <input class="input" id="nric" type="text" placeholder="Fill in your NRIC number here">
+                                            <input type="hidden" id="token" value="">
+                                            <br>
+                                            <br>
+                                            <button type="submit" class="button is-primary">Submit</button>
+                                        </form>
+                                        <div id="sp-face-here">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            $("form").on('submit', function (e) {
+                nric = $("#nric").val();
+                console.log(nric)
+
+                var payload = '{"service_id": "SingPass", "user_id": "' + nric + '"}';
+
+                $.ajax({
+                    url: "https://developer.bio-api.singpass.gov.sg/api/face/verify/token",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    processData: false,
+                    data: payload,
+                    success: function(data) {
+                        var token = data.token
+                        $('#msgs').html('<article class="message is-info"><div class="message-body">NRIC Validated!</div></article>')
+                        $("#token").val(token)
+                        $("#sp-face-here").append($('\
+                        <sp-face token="' + token + '" base_url="https://stg-bio-stream.singpass.gov.sg">\
+                            <!-- Custom slots go in here -->\
+                            <div id="sp-face-slots">\
+                                <div slot="grant_permission">\
+                                    <br>\
+                                    <p class="has-text-grey-dark">Before we proceed, please allow us to access your camera.<br></p>\
+                                </div>\
+                                <br>\
+                                <div slot="grant_button">\
+                                    <button type="button">Allow camera access</button>\
+                                </div>\
+                                <!-- Permissions denied -->\
+                                <div slot="permission_denied">\
+                                    <br>\
+                                    <p>You\'ve denied permissions. If you would like to continue with the verification, please refresh the page.<br></p>\
+                                </div>\
+                                <!-- UI has access to camera and is ready to begin verification -->\
+                                <div slot="ready">\
+                                    <br>\
+                                    <p>Thank you. Please proceed to verify your identity.<br></p>\
+                                </div>\
+                                <br>\
+                                <div slot="button">\
+                                    <button type="button" class="button is-primary">Scan my face</button>\
+                                </div>\
+                                <!-- User aborted the verification process -->\
+                                <div slot="aborted">\
+                                    <br>\
+                                    <p>If you\'d like to try again, please click the button below.<br></p>\
+                                </div>\
+                                <!-- Passed verification -->\
+                                <div slot="passed">\
+                                    <!-- add a message to state that the SDK has passed your face verification -->\
+                                </div>\
+                                <!-- Failed verification -->\
+                                <div slot="passed">\
+                                    <!-- add a message to state that the SDK has passed your face verification -->\
+                                </div>\
+                                <!-- Errors -->\
+                                <div slot="error">\
+                                    <br>\
+                                    <p class="has-text-grey-dark">Oh no, something went wrong. Please try again.<br></p>\
+                                </div>\
+                            </div>\
+                        </sp-face>'));
+                    },
+                    error: function(error){
+                        if (error.status == "404" || error.status == "400") {
+                            var tokenResponse = error.responseJSON
+                            $('#msgs').html('<article class="message is-danger"><div class="message-body">' + tokenResponse.status + ' ' + tokenResponse.message.error_description + '</div></article>')
+                        }
+                        else if (error.response != undefined) {
+                            var r = error.responseJSON
+                            $('#msgs').html('<article class="message is-danger"><div class="message-body">' + r + '</div></article>')
+                        } else {
+                            this.notice = "Verification service is offline."
+                            $('#msgs').html('<article class="message is-danger"><div class="message-body">ERROR: Service is offline</div></article>')
+                        }
+                    }
+                });
+                e.preventDefault();
+            });
+
+            function SpfaceEvent(event) {
+                switch (event.type) {
+                    case "passed":
+                    case "failed":
+                        validateResult(); // make a function that sends a request to the validateResult API
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            function validateResult(){
+                nric = $("#nric").val();
+                token = $("#token").val();
+                var payload = '{"service_id": "SingPass", "user_id": "' + nric + '", "token": "' + token + '"}';
+                $("#nric").val("")
+                $.ajax({
+                    url: "https://www.identiface.live/api/face/verify/validate",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    processData: false,
+                    data: payload,
+                    success: function(data) {
+                        console.log(data)
+                        if (data.type == "success"){
+                            var hasPassed = data.is_passed
+                            var reason = data.reason
+
+                            var score = Math.ceil(data.score * 100)
+
+                            //set the minimun score you will allow to pass
+                            var minThreshold = 70
+
+                            if (hasPassed && score > minThreshold){
+                                $("form").hide()
+                                $('#msgs').html('<article class="message is-success"><div class="message-body">Passed Matching</div></article>')
+                            } else {
+                                $('#msgs').html('<article class="message is-danger"><div class="message-body">Failed verification! Match score' + data.score + '</div></article>')
+                            }
+                        } else {
+                            var message = data.message
+                            $('#msgs').html('<article class="message is-danger"><div class="message-body">' + message.error_description + '</div></article>')
+                        }
+                    },
+                    error: function(error){
+                        
+                        if (error.statusText == "error"){
+                            var r = error.responseJSON
+                            var message = r.message
+                            $('#msgs').html('<article class="message is-danger"><div class="message-body">' + message + '</div></article>')
+                        } else {
+                            $('#msgs').html('<article class="message is-danger"><div class="message-body">ERROR: Service is offline</div></article>')
+                        }
+                    }
+                    
+                });
+            }
+        </script>
+    </body>
+</html>
