@@ -197,7 +197,7 @@ export default {
             baseURL: "http://localhost:9000",
             singpassURL: "https://stg-bio-stream.singpass.gov.sg",
             scriptURL: "https://bio-face.s3-ap-southeast-1.amazonaws.com/html5sdk/spface.js",
-            serviceID: "SingPass",
+            serviceID: "Singpass",
         }
     },
     components: {

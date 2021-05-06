@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-image" v-if="(this.user_id.length != 9) || (this.user_id.length == 9 && cameraState && !uploaded)" style="max-height:25vh;">
                         <figure class="image is-4by3">
-                            <img ref="placeholder" src="@/assets/img/secure_login.svg" alt="SingPass face" style="max-height:20vh; margin-top:5vh;">
+                            <img ref="placeholder" src="@/assets/img/secure_login.svg" alt="Singpass face" style="max-height:20vh; margin-top:5vh;">
                             <br>
                         </figure>
                     </div>
@@ -37,7 +37,7 @@
                                 <hr>
                                 <br v-if="!uploaded">
                                 <div v-if="(this.user_id.length != 9) || (this.user_id.length == 9 && cameraState && !uploaded)">
-                                    <p>We will verify your image using the <b>SingPass Face Verification service</b>.</p>
+                                    <p>We will verify your image using the <b>Singpass Face Verification service</b>.</p>
                                     <a @click="isPrivacyStatementActive = true"><u>Read privacy statement</u></a>
                                     <br><br>
                                     <a class="button is-primary" href="/sample-app">Use another way</a>
@@ -90,10 +90,10 @@
                 <div class="card-content">
                     <div class="content" style="overflow-y: scroll; max-height:90vh !important;">
                         <img src="@/assets/img/SingPassLogo.svg">
-                        <h5><b>Verifying your identity with SingPass Face</b></h5>
+                        <h5><b>Verifying your identity with Singpass Face</b></h5>
                         <hr>
                         <br>
-                        <p>The new SingPass face verification feature makes it easy for you to verify your identity by scanning your face. We are committed to protecting your data when you use the SingPass face verification feature:</p>
+                        <p>The new Singpass face verification feature makes it easy for you to verify your identity by scanning your face. We are committed to protecting your data when you use the Singpass face verification feature:</p>
                         <br>
                         <b>1. Your consent is key</b>
                         <hr>
@@ -110,7 +110,7 @@
                         <b>4. Storage of your image is time-limited</b>
                         <hr>
                         <p>The system will only keep the captured facial images for 30 days for audit purposes. Thereafter, the images will be deleted. There is no collection or storing of any other personal data from you on the system. Your data will not be used for any surveillance or commercial purposes.</p>
-                        <p>If you do not wish to use the SingPass face verification feature, you may use other available way of authentication, such as SMS OTP.</p>
+                        <p>If you do not wish to use the Singpass face verification feature, you may use other available way of authentication, such as SMS OTP.</p>
                         <br>
                         <small class="is-italic">Privacy Statement as of 08 July 2020</small>
                         <br>
