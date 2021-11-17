@@ -1,0 +1,21 @@
+version: '3.7'
+
+networks:
+    spface-net:
+        driver: bridge
+
+services:
+    #######################################
+    # UI
+    #######################################
+        
+    spface-ui: # service name
+        build: ./ui # image we want to use
+        image: {Add your docker image}
+        container_name: spface-ui
+        restart: always
+        ports:
+        - 3000:3000
+        networks:
+        - spface-net
+        command: "npm run start"
