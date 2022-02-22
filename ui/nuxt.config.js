@@ -16,7 +16,7 @@ export default {
     ],
     script: [
         // Link to the staging environment of spface.js
-        { src: 'https://stg-bio-face.s3-ap-southeast-1.amazonaws.com/html5sdk/spface.js'},
+        { src: 'https://stg-bio-face.s3-ap-southeast-1.amazonaws.com/html5sdk/spface-v3.3.8.js'},
     ],
   },
   /*

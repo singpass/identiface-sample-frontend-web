@@ -12,6 +12,9 @@
                     :animated="true"
                     :rounded="false"
                     :has-navigation="false">
+                    <b-step-item :clickable="false">
+                        <h1 class="title has-text-centered">-</h1>
+                    </b-step-item>
                     <b-step-item step="1" label="Transfer details" :clickable="false">
                         <h1 class="title has-text-centered">Transfer details</h1>
                         <div class="card">
@@ -27,11 +30,8 @@
                                         </b-field>
                                         <b-field label="Key in your NRIC/FIN number to confirm">
                                             <b-input v-model="user_id" placeholder="S7012345A" required :disabled="validated"></b-input>
-                                        </b-field>
-                                        <a class="is-primary is-size-7" @click="user_id = 'G2834561K'" v-if="this.user_id == 'G2957839M'"><u>Set to a dummy NRIC persona that will fail verification</u></a>
-                                        <a class="is-primary is-size-7" @click="user_id = 'G2957839M'" v-else><u>Set to a dummy NRIC persona that will pass verification</u></a>
-                                        <br><br>
-                                        <b-button type="submit" class="is-dark" :disabled="!(!validated && this.user_id.length == 9)" v-on:click="startVerify">Next</b-button>
+                                        </b-field><br>
+                                        <b-button type="submit" class="is-primary" :disabled="!(!validated && this.user_id.length == 9)" v-on:click="startVerify">Next</b-button>
                                     </form>
                                 </div>
                             </div>
@@ -46,15 +46,15 @@
                                 <div class="content" ref="verifyCard" v-if="verified" style="justify-content:center;">
                                     <img src="@/assets/img/tick.png" style="max-height: 30vh;">
                                     <h1>Success!</h1>
-                                    <h5>{{amount}} was transferred to account number {{account}}.</h5>
+                                    <h5>Your identity verification was successful.</h5>
                                 </div>
                                 <div class="content" ref="verifyCard" v-if="!verified">
                                     <h4>Verify your identity with SingPass Face</h4>
-                                    <img src="@/assets/img/SingPassLogo.svg">
+                                    <img src="@/assets/img/singpass-icon-red.svg">
                                     <br>
                                     <a class="is-primary is-size-7"
                                         @click="isPrivacyAssuranceActive = true">
-                                        Read SingPass Face Privacy Assurance
+                                        Read Singpass Face Privacy Assurance
                                     </a>
                                     <br>
                                     <br>
@@ -65,8 +65,10 @@
                                     <b-loading :is-full-page="false" :active.sync="isLoading" :can-cancel="true"></b-loading>
                                     <sp-face :token="token" v-if="validated" 
                                     base_url="https://stg-bio-stream.singpass.gov.sg"
-                                    logo="https://www.ndi-api.gov.sg/assets/img/ndi-api-logo.png"
-                                    show_countdown="true"
+                                    logo="https://uat.api.singpass.gov.sg/assets/api-lib/img/singpass-icon-red.svg"
+                                    show_countdown="false"
+                                    kiosk_mode="false"
+                                    :language="customLanguage"
                                     >
                                         <!-- Custom slots go in here -->
                                         <div id="sp-face-slots">
@@ -80,7 +82,7 @@
                                                 <p class="has-text-grey-dark">Before we proceed, please allow us to access your camera.<br></p>
                                             </div>
                                             <div slot="grant_button" class="m-1">
-                                                <b-button class="is-warning">Allow camera access</b-button><br><br>
+                                                <b-button class="is-warning" id="allowedcam">Allow camera access</b-button><br><br>
                                                 <!-- Let the user verify their identity in another method -->
                                                 <a class="has-text-grey" href="/"><u>Use another way to verify my identity</u></a>
                                             </div>
@@ -93,7 +95,7 @@
                                                 <p class="has-text-grey-dark">Thank you. Please proceed to verify your identity.<br></p>
                                             </div>
                                             <div slot="button" class="m-1">
-                                                <b-button class="is-primary">Scan my face</b-button>
+                                                <b-button class="is-danger"><img src="https://uat.api.singpass.gov.sg/assets/api-lib/identiface/img/fv-inline-primary.svg"/></b-button>
                                             </div>
                                             <!-- User aborted the verification process -->
                                             <div slot="aborted" class="m-1">
@@ -113,6 +115,7 @@
                                             <div slot="failed" class="m-1">
                                                 <!-- Redirect to the next action on successful validation -->
                                                 <p>You have failed verification. Retry?</p>
+                                                <a class="button is-warning" href="/sample-app/transactions">Retry</a>
                                             </div>
                                             <!-- Errors -->
                                             <div slot="error" class="m-1">
@@ -134,8 +137,7 @@
                     <div class="content">
                         <p><b>Welcome to the Face Verify API demo.</b></p>
                         <p class="is-italic">The Face Verify Service contains a face-scanning module with Presentation-Attack-Detection (PAD) and liveness detection technologies that you can use to embed into your frontend, with API endpoints to validate the user's identity and results.</p>
-                        <p>In this sample transaction authorisation demo, we will be using a dummy NRIC persona <code>G2957839M</code>, which will return an always <code>true</code> result when verifying the identity, regardless of the face.</p>
-                        <p>If you'd like to test a flow that will <b>fail</b> authentication, please replace the dummy NRIC persona to <code>G2834561K</code>. This will return a <code>false</code> match result.</p>
+                        <p>In this sample transaction, we will use Face Verify to step-up the level of authentication and assurance.</p>
                         <br>
                         <a class="button is-primary" @click="isCardModalActive = false">Close</a>
                     </div>
@@ -147,7 +149,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="content" style="overflow-y: scroll; max-height:90vh !important;">
-                        <img src="@/assets/img/SingPassLogo.svg">
+                        <img src="@/assets/img/singpass-icon-red.svg">
                         <h5><b>Verifying your identity with SingPass Face</b></h5>
                         <hr>
                         <br>
@@ -198,10 +200,11 @@ export default {
         // Mounted is part of a lifecycle hook in VueJS. Once the DOM is ready, you can specify which functions to be run here.
         // This web app will retrieve the OAuth access token first on page serve
         this.token = ""
-        this.notice = "You need to verify before proceeding with the transfer."
-        this.alerts("You're about to transfer more than your daily limit. Verification is needed.", "is-danger", 5000)
-
+        this.notice = "Let's step up your authentication before proceeding with the transfer."
+        
         if (process.client) { 
+
+            // this.useLanguage()
             window.SpfaceEvent = event => {
 
                 var x = document.getElementsByTagName("PROGRESS")
@@ -211,12 +214,19 @@ export default {
                         this.alerts("You've aborted the process.", "is-danger", 5000)
                         break
                     case "passed":
-                    case "failed":
                         x[0].setAttribute("value", 100)
+                        this.validateResult()
+                        break
+                    case "failed":
+                        x[0].classList.remove("is-success")
+                        x[0].classList.add("is-danger")
+                        x[0].setAttribute("value", 100)
+                        this.alerts("Error: " + event.detail.reason, "is-danger", 5000)
                         this.validateResult()
                         break
                     case "error":
                         this.alerts("Error: " + event.detail.reason, "is-danger", 5000)
+                        this.validateResult()
                         break
                     case "ready":
                         x[0].setAttribute("value", 10)
@@ -264,18 +274,20 @@ export default {
             columnA: "column is-6 is-offset-3",
             label: "Validate NRIC",
             
+            
             token: "",
-            activeStep: 0,
+            customLanguage: "",
+            activeStep: 1,
 
             title: "Verification",
 
             // dummy data
-            account: "177-77777-777",
-            amount: "S$ 9.99",
+            account: "XXX-XXXXX-777",
+            amount: "S$ XXX.XX",
 
             // data to send to the server
             service_id: "SingPass",
-            user_id: "G2957839M",
+            user_id: "",
             transaction_type: "SingPass onboarding",
             image: "",
             validated: false,
@@ -294,7 +306,7 @@ export default {
             this.validateNRIC().then((token) => {
                 if (token != "") {
                     this.validated = true
-                    this.activeStep = 1
+                    this.activeStep = 2
                     this.openLoading()
                 }
             }).catch((error) => {
@@ -315,6 +327,13 @@ export default {
                 queue: false,
                 canvasWidth: 800,
                 canvasHeight: 800,
+            })
+        },
+        useLanguage() {
+            let r = this.$axios.$get("https://stg-bio-resources.singpass.gov.sg/html5sdk/language_ta.txt").then((response) => {
+                this.customLanguage = JSON.stringify(response)
+            }).catch((error) => {
+                this.alerts(error, "is-danger", 2000)
             })
         },
         validateNRIC() {
@@ -374,7 +393,6 @@ export default {
                         this.verified = true
                         this.notice = "Transaction successful!"
                         this.title = "Success!"
-                        this.alerts("You have successfully transferred " + this.amount + " to account number 177-77777-777.", "is-success", 10000)
                     } else {
                         this.alerts("Failed verification", "is-danger", 5000)
                     }
